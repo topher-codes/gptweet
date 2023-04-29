@@ -11,19 +11,30 @@ import { api } from "~/utils/api";
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
 
+  const [ twitterUsername, setTwitterUsername ] = useState<string>("");
   const [ twitterID, setTwitterID ] = useState<string>("");
+  const [ tweets, setTweets ] = useState<string[]>([]);
 
-  const getTweets = async () => {
-    const res = await fetch("/api/twitter?username=" + twitterID); 
+
+  const getID = async () => {
+    const res = await fetch("/api/getid?username=" + twitterUsername); 
     const data = await res.json();
     return data.data.id ? data.data.id : "No ID found";
   };
 
   const showID = async () => {
-    const twitterID = await getTweets();
+    const twitterID = await getID();
+    setTwitterID(twitterID.toString());
     console.log(twitterID);
   };
 
+  const getTweets = async () => {
+    const res = await fetch("/api/gettweets?id=" + twitterID);
+    const data = await res.json();
+    console.log(data.data)
+    setTweets(data.data);
+    return data.data;
+  };
 
   return (
     <>
@@ -76,9 +87,22 @@ const Home: NextPage = () => {
             <p>
               Let's grab your Twitter ID so we can fetch tweets!
               <br />
-              <input className="border-4" type="text" placeholder="twitter username" value={twitterID} onChange={(e) => setTwitterID(e.target.value)} />
+              <input className="border-4" type="text" placeholder="twitter username" value={twitterUsername} onChange={(e) => setTwitterUsername(e.target.value)} />
               <button onClick={showID}>Show ID</button>
+              <button onClick={getTweets}>Get Tweets</button>
             </p>
+            {/* Create a div to display tweets */}
+            <div className="flex flex-col">
+              <p className="text-2xl">Tweets</p>
+              <div className="flex flex-col">
+                {tweets.map((tweet) => (
+                  <div className="my-2 py-4 border-4 border-black rounded-md">
+                    <p key={tweet.id} className="text-xl">{tweet.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
           </>
         )}
       </main>
