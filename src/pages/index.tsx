@@ -6,6 +6,7 @@ import {useState} from "react";
 
 
 import { api } from "~/utils/api";
+import Image from "next/image";
 
 
 const Home: NextPage = () => {
@@ -44,7 +45,7 @@ const Home: NextPage = () => {
         <meta name="description" content="GPTweet" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex h-screen w-full flex-1 flex-col items-center justify-center px-20 text-center">
+      <main className="flex min-h-screen w-full flex-1 flex-col items-center justify-center px-20 text-center">
         <h1 className="text-6xl font-bold">GPTweeet</h1>
         
         <p className="mt-3 text-2xl">
@@ -82,22 +83,22 @@ const Home: NextPage = () => {
               Your Twitter email is {session.user.email}
             </p>
             <p className="mt-3 text-2xl">
-              Your Twitter image is {session.user.image}
+              Your Twitter image is <Image src={session.user.image} width={50} height={50} alt="img" />
             </p>
-            <p>
+            <p className="my-4">
               Let's grab your Twitter ID so we can fetch tweets!
               <br />
               <input className="border-4" type="text" placeholder="twitter username" value={twitterUsername} onChange={(e) => setTwitterUsername(e.target.value)} />
-              <button onClick={showID}>Show ID</button>
-              <button onClick={getTweets}>Get Tweets</button>
+              <button className="border-2 border-black rounded-md mx-2" onClick={showID}>Show ID</button>
+              <button className="border-2 border-black rounded-md mx-2" onClick={getTweets}>Get Tweets</button>
             </p>
             {/* Create a div to display tweets */}
             <div className="flex flex-col">
               <p className="text-2xl">Tweets</p>
               <div className="flex flex-col">
                 {tweets.map((tweet) => (
-                  <div className="my-2 py-4 border-4 border-black rounded-md">
-                    <p key={tweet.id} className="text-xl">{tweet.text}</p>
+                  <div key={tweet.id} className="my-2 py-4 border-4 border-black rounded-md">
+                    <p  className="text-xl">{tweet.text}</p>
                   </div>
                 ))}
               </div>
