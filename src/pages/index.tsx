@@ -3,7 +3,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {useState, useEffect, useReducer} from "react";
-import {ACTIONS, reducer} from "../../hooks/reducer"
+import {ACTIONS, reducer} from "../hooks/reducer"
 import TweetsContainer from "~/components/tweets";
 
 
