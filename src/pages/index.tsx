@@ -6,8 +6,7 @@ import {useState, useEffect, useReducer} from "react";
 import {ACTIONS, reducer} from "../../hooks/reducer"
 import TweetsContainer from "~/components/tweets";
 
-
-import { api } from "~/utils/api";
+import {getTweets} from "~/lib/api";
 import Image from "next/image";
 
 
@@ -18,7 +17,6 @@ const Home: NextPage = () => {
   const [ tweets, setTweets ] = useState<string[]>([]);
   const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
 
-  console.log(state.twitterUsername)
   const getID = async () => {
     const res = await fetch("/api/getid?username=" + state.twitterUsername); 
     const data = await res.json();
@@ -35,13 +33,18 @@ const Home: NextPage = () => {
     console.log(state.twitterID);
   };
 
-  const getTweets = async () => {
-    const res = await fetch("/api/gettweets?id=" + state.twitterID);
-    const data = await res.json();
-    console.log(data.data)
-    setTweets(data.data);
-    return data.data;
+  const setTheTweets = async () => {
+    const tweetsData = await getTweets(state.twitterID);
+    setTweets(tweetsData);
   };
+
+  //const getTweets = async () => {
+  //  const res = await fetch("/api/gettweets?id=" + state.twitterID);
+  //  const data = await res.json();
+  //  console.log(data.data)
+  //  setTweets(data.data);
+  //  return data.data;
+  //};
 
   // Add a useEffect hook to iterate through the tweets array and push only the text to the cleanedTweets array.
   useEffect(() => {
@@ -136,7 +139,7 @@ const Home: NextPage = () => {
               } 
               />
               <button type="button" className="border-2 border-black rounded-md mx-2" onClick={showID}>Show ID</button>
-              <button type="button" className="border-2 border-black rounded-md mx-2" onClick={getTweets}>Get Tweets</button>
+              <button type="button" className="border-2 border-black rounded-md mx-2" onClick={setTheTweets}>Get Tweets</button>
             </form>
             {/* Create a div to display tweets */}
             <div className="flex flex-col">
