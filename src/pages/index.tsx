@@ -2,7 +2,9 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
-import {useState} from "react";
+import {useState, useEffect} from "react";
+
+import TweetsContainer from "~/components/tweets";
 
 
 import { api } from "~/utils/api";
@@ -15,6 +17,7 @@ const Home: NextPage = () => {
   const [ twitterUsername, setTwitterUsername ] = useState<string>("");
   const [ twitterID, setTwitterID ] = useState<string>("");
   const [ tweets, setTweets ] = useState<string[]>([]);
+  const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
 
 
   const getID = async () => {
@@ -36,6 +39,15 @@ const Home: NextPage = () => {
     setTweets(data.data);
     return data.data;
   };
+
+  // Add a useEffect hook to iterate through the tweets array and push only the text to the cleanedTweets array.
+  useEffect(() => {
+    for (const tweet of tweets) {
+      setCleanedTweets((cleanedTweets) => [...cleanedTweets, tweet.text]);
+    }
+  }, [tweets]);
+
+
 
   return (
     <>
@@ -96,11 +108,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col">
               <p className="text-2xl">Tweets</p>
               <div className="flex flex-col">
-                {tweets.map((tweet) => (
-                  <div key={tweet.id} className="my-2 py-4 border-4 border-black rounded-md">
-                    <p  className="text-xl">{tweet.text}</p>
-                  </div>
-                ))}
+                <TweetsContainer tweets={cleanedTweets} />
               </div>
             </div>
 
