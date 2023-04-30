@@ -9,11 +9,16 @@ function removeLinks(string: string) {
   return string.replace(/https?:\/\/[^\s]+$/g, "");
 }
 
+function removeHashtags(string: string) {
+  // Remove all hashtags from the string (words that begin with "#").
+  return string.replace(/#\w+/g, "");
+}
+
 function createTweetsObject(tweets: string[]) {
   // Create an object that contains the tweets, with each tweet as a key-value pair.
   const newTweets: string[] = [];
   for (const tweet of tweets) {
-    newTweets.push(removeAtMentions(removeLinks(tweet)))
+    newTweets.push(removeHashtags(removeAtMentions(removeLinks(tweet))))
   }
   return newTweets;
 }
