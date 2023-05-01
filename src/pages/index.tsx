@@ -13,10 +13,13 @@ import Image from "next/image";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
-  const [state, dispatch] = useReducer(reducer, {tweets: []})
+  /* placeholder obj, will create lazyInit function to clean state*/
+  const [state, dispatch] = useReducer(reducer, 
+    {tweets: [], cleanedTweets: []}
+    )
 
   //const [ tweets, setTweets ] = useState<string[]>([]);
-  const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
+  //const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
 
   console.log(state.twitterUsername)
   const getID = async () => {
@@ -51,7 +54,8 @@ const Home: NextPage = () => {
   // Add a useEffect hook to iterate through the tweets array and push only the text to the cleanedTweets array.
   useEffect(() => {
     for (const tweet of state.tweets) {
-      setCleanedTweets((cleanedTweets) => [...cleanedTweets, tweet.text]);
+      dispatch({type: ACTIONS.CLEANED_TWEETS, 
+      payload: {cleanedTweets: tweet.text}})
     }
   }, [state.tweets]);
 
@@ -147,7 +151,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col">
               <p className="text-2xl">Tweets</p>
               <div className="flex flex-col">
-                <TweetsContainer tweets={cleanedTweets} />
+                <TweetsContainer tweets={state.cleanedTweets} />
               </div>
             </div>
 

@@ -15,6 +15,6 @@ export function reducer(state, action) {
         case ACTIONS.GET_TWEETS:
             return {...state, tweets: action.payload.tweets};
         case ACTIONS.CLEANED_TWEETS:
-            return {state, cleanedTweets: action.payload.cleanedTweets}
+            return {...state, cleanedTweets: [...state.cleanedTweets, action.payload.cleanedTweets]}
     }
 }
