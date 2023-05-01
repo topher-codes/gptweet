@@ -13,9 +13,9 @@ import Image from "next/image";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
-  const [state, dispatch] = useReducer(reducer, {})
+  const [state, dispatch] = useReducer(reducer, {tweets: []})
 
-  const [ tweets, setTweets ] = useState<string[]>([]);
+  //const [ tweets, setTweets ] = useState<string[]>([]);
   const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
 
   console.log(state.twitterUsername)
@@ -39,16 +39,21 @@ const Home: NextPage = () => {
     const res = await fetch("/api/gettweets?id=" + state.twitterID);
     const data = await res.json();
     console.log(data.data)
-    setTweets(data.data);
+    dispatch({
+      type: ACTIONS.GET_TWEETS,
+      payload: {
+        tweets: data.data
+      } 
+    })
     return data.data;
   };
 
   // Add a useEffect hook to iterate through the tweets array and push only the text to the cleanedTweets array.
   useEffect(() => {
-    for (const tweet of tweets) {
+    for (const tweet of state.tweets) {
       setCleanedTweets((cleanedTweets) => [...cleanedTweets, tweet.text]);
     }
-  }, [tweets]);
+  }, [state.tweets]);
 
  /* form submission skeleton to prevent re-renders */
   const handleSubmit = (e) => {
