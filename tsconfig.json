@@ -28,6 +28,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-  ],
+, "src/hooks/reducer.js"  ],
   "exclude": ["node_modules"]
 }

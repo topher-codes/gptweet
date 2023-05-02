@@ -3,7 +3,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {useState, useEffect, useReducer} from "react";
-import {ACTIONS, reducer} from "../../hooks/reducer"
+import {ACTIONS, reducer} from "../hooks/reducer"
 import TweetsContainer from "~/components/tweets";
 
 import {getTweets} from "~/lib/api";
@@ -12,10 +12,13 @@ import Image from "next/image";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
-  const [state, dispatch] = useReducer(reducer, {})
+  /* placeholder obj, will create lazyInit function to clean state*/
+  const [state, dispatch] = useReducer(reducer, 
+    {tweets: [], cleanedTweets: []}
+    )
 
-  const [ tweets, setTweets ] = useState<string[]>([]);
-  const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
+  //const [ tweets, setTweets ] = useState<string[]>([]);
+  //const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
 
   const getID = async () => {
     const res = await fetch("/api/getid?username=" + state.twitterUsername); 
@@ -32,7 +35,19 @@ const Home: NextPage = () => {
     }})
     console.log(state.twitterID);
   };
-
+  
+  const getTweets = async () => {
+    const res = await fetch("/api/gettweets?id=" + state.twitterID);
+    const data = await res.json();
+    console.log(data.data)
+    dispatch({
+      type: ACTIONS.GET_TWEETS,
+      payload: {
+        tweets: data.data
+      } 
+    })
+    return data.data;
+    
   const setTheTweets = async () => {
     const tweetsData = await getTweets(state.twitterID);
     setTweets(tweetsData);
@@ -48,10 +63,14 @@ const Home: NextPage = () => {
 
   // Add a useEffect hook to iterate through the tweets array and push only the text to the cleanedTweets array.
   useEffect(() => {
-    for (const tweet of tweets) {
-      setCleanedTweets((cleanedTweets) => [...cleanedTweets, tweet.text]);
+    for (const tweet of state.tweets) {
+      dispatch({
+        type: ACTIONS.CLEANED_TWEETS, 
+      payload: {
+        cleanedTweets: tweet.text
+      }});
     }
-  }, [tweets]);
+  }, [state.tweets]);
 
  /* form submission skeleton to prevent re-renders */
   const handleSubmit = (e) => {
@@ -145,7 +164,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col">
               <p className="text-2xl">Tweets</p>
               <div className="flex flex-col">
-                <TweetsContainer tweets={cleanedTweets} />
+                <TweetsContainer tweets={state.cleanedTweets} />
               </div>
             </div>
 
