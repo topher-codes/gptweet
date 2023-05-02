@@ -54,8 +54,11 @@ const Home: NextPage = () => {
   // Add a useEffect hook to iterate through the tweets array and push only the text to the cleanedTweets array.
   useEffect(() => {
     for (const tweet of state.tweets) {
-      dispatch({type: ACTIONS.CLEANED_TWEETS, 
-      payload: {cleanedTweets: tweet.text}})
+      dispatch({
+        type: ACTIONS.CLEANED_TWEETS, 
+      payload: {
+        cleanedTweets: tweet.text
+      }});
     }
   }, [state.tweets]);
 
