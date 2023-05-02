@@ -36,21 +36,15 @@ const Home: NextPage = () => {
     console.log(state.twitterID);
   };
   
-  const getTweets = async () => {
-    const res = await fetch("/api/gettweets?id=" + state.twitterID);
-    const data = await res.json();
-    console.log(data.data)
+    /* lib api for reference */
+  const setTheTweets = async () => {
+    const tweetsData = await getTweets(state.twitterID);
     dispatch({
       type: ACTIONS.GET_TWEETS,
       payload: {
-        tweets: data.data
+        tweets: tweetsData,
       } 
     })
-    return data.data;
-    
-  const setTheTweets = async () => {
-    const tweetsData = await getTweets(state.twitterID);
-    setTweets(tweetsData);
   };
 
   //const getTweets = async () => {
