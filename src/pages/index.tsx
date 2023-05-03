@@ -8,6 +8,7 @@ import TweetsContainer from "~/components/tweets";
 
 import {getTweets} from "~/lib/api";
 import Image from "next/image";
+import OptionsForm from "~/components/OptionsForm/OptionsForm";
 
 
 const Home: NextPage = () => {
@@ -158,6 +159,8 @@ const Home: NextPage = () => {
             <div className="flex flex-col">
               <p className="text-2xl">Tweets</p>
               <div className="flex flex-col">
+                {/* this should be conditional rendering later on. */}
+                <OptionsForm />
                 <TweetsContainer tweets={state.cleanedTweets} />
               </div>
             </div>
