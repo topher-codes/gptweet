@@ -3,7 +3,6 @@ package main
 import (
     "fmt"
     "context"
-    "os"
     "net/http"
     "log"
     "encoding/json"
@@ -132,7 +131,7 @@ func main() {
 
     })
 
-    log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), nil))
+    log.Fatal(http.ListenAndServe(":3030", nil))
     
 }
 
