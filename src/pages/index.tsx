@@ -18,43 +18,18 @@ const Home: NextPage = () => {
     {tweets: [], cleanedTweets: []}
     )
 
-  //const [ tweets, setTweets ] = useState<string[]>([]);
-  //const [ cleanedTweets, setCleanedTweets ] = useState<string[]>([]);
 
-  const getID = async () => {
-    const res = await fetch("/api/getid?username=" + state.twitterUsername); 
-    const data = await res.json();
-    return data.data.id ? data.data.id : "No ID found";
-  };
-
-  const showID = async () => {
-    
-    const IdData = await getID(); 
-    dispatch({type: ACTIONS.UPDATE_TWITTER_ID, 
-      payload: {
-      twitterID: IdData.toString(),
-    }})
-    console.log(state.twitterID);
-  };
   
     /* lib api for reference */
   const setTheTweets = async () => {
-    const tweetsData = await getTweets(state.twitterID);
+    const tweetsData = await getTweets(state.twitterUsername);
     dispatch({
       type: ACTIONS.GET_TWEETS,
       payload: {
         tweets: tweetsData,
       } 
     })
-  };
-
-  //const getTweets = async () => {
-  //  const res = await fetch("/api/gettweets?id=" + state.twitterID);
-  //  const data = await res.json();
-  //  console.log(data.data)
-  //  setTweets(data.data);
-  //  return data.data;
-  //};
+  }
 
   // Add a useEffect hook to iterate through the tweets array and push only the text to the cleanedTweets array.
   useEffect(() => {
@@ -66,23 +41,6 @@ const Home: NextPage = () => {
       }});
     }
   }, [state.tweets]);
-
- /* form submission skeleton to prevent re-renders */
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const usernameFieldInput = e.target.userNameField.value;
-
-    if (usernameFieldInput.trim() === "" ) return;
-
-    /*
-    dispatch({
-                  type: ACTIONS.UPDATE_TWITTER_USERNAME,
-                payload: {
-                  twitterUsername: usernameFieldInput,
-                }})
-    */
-  }
-
 
 
   return (
@@ -152,7 +110,6 @@ const Home: NextPage = () => {
                 }})
               } 
               />
-              <button type="button" className="border-2 border-black rounded-md mx-2" onClick={showID}>Show ID</button>
               <button type="button" className="border-2 border-black rounded-md mx-2" onClick={setTheTweets}>Get Tweets</button>
             </form>
             {/* Create a div to display tweets */}
