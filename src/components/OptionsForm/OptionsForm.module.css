@@ -1,0 +1,27 @@
+
+.options {
+    background-color: rgba(151, 197, 238, 0.781);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.options__date_range_container {
+    display: flex;
+    gap: 8px;
+}
+
+.options_button {
+    margin-top: 10px;
+    border-radius: 5px;
+    background-color: aqua;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.options_button:hover {
+    background-color: rgb(4, 241, 241);
+}
