@@ -1,31 +1,29 @@
-# Create T3 App
+# GPTWEET
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## What is a tweet anyways? 
 
-## What's next? How do I make an app with this?
+Well, it's part of a conversation. But wouldn't it be nice if tweets read like conversations? 
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Gptweet cleans up tweets, and helps you visualize the entire conversation
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### Step 1 
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+Input your twitter handle, and modify the options which will determine which tweets are fetched. 
 
-## Learn More
+### Step 2
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Select which tweets you would like to process.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+### Step 3 
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+We will generate a prompt for you, and at this stage you can fine tune your prompt with different styles, themes, 
+and even input your own options. 
 
-## How do I deploy this?
+### Step 4
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+We will send your tweets to GPT, and it will return up to four "stories", which are conversations that have been generated 
+using your tweets!
+<br></br>
 
-
-## Added something!
+This can be a great way to summarize long threads, or get an idea of a conversation that is happening on twitter. Feel free
+to get creative with the options!
