@@ -13,6 +13,7 @@ import (
     "github.com/michimani/gotwi/fields"
     "github.com/michimani/gotwi/tweet/timeline"
     tlt "github.com/michimani/gotwi/tweet/timeline/types"
+    "github.com/michimani/gotwi/resources"
 
     "github.com/michimani/gotwi/user/userlookup"
     "github.com/michimani/gotwi/user/userlookup/types"
@@ -22,12 +23,6 @@ import (
 type User struct {
     ID string `json:"id"`
     Name string `json:"name"`
-}
-
-type Tweet struct {
-    Text string `json:"text"`
-    AuthorID string `json:"author_id"`
-
 }
 
 type TweetList struct {
@@ -53,6 +48,14 @@ func getUser (username string, c *gotwi.Client) (User, error) {
 }
 
 
+type Tweet struct {
+    Text string `json:"text"`
+    AuthorID string `json:"author_id"`
+    Hashtags []resources.TweetEntityTag `json:"hashtags"`
+    Mentions []resources.TweetEntityTag `json:"mentions"`
+}
+
+
 // Get the Tweets by user ID
 func getTweets (user User, c *gotwi.Client) (TweetList, error) {
     input := &tlt.ListTweetsInput{
@@ -61,6 +64,8 @@ func getTweets (user User, c *gotwi.Client) (TweetList, error) {
             fields.TweetFieldCreatedAt,
             fields.TweetFieldText,
             fields.TweetFieldAuthorID,
+            fields.TweetFieldReferencedTweets,
+            fields.TweetFieldEntities,
         },
         MaxResults: 20,
     }
@@ -75,6 +80,8 @@ func getTweets (user User, c *gotwi.Client) (TweetList, error) {
         tweets = append(tweets, Tweet{
             Text: gotwi.StringValue(t.Text),
             AuthorID: gotwi.StringValue(t.AuthorID),
+            Hashtags: t.Entities.HashTags,
+            Mentions: t.Entities.Mentions,
         })
     }
 
