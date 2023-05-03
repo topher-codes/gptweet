@@ -18,3 +18,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const data = await response.json();
   res.status(200).json(data);
 }
+
+
+
+/* GO CODE */
+/* REQUIRES TO HAVE GO INSTALLED, NAVIGATE TO src/go and run main.go */
+/* THIS WILL SPIN UP A GO WEBSERVER AND HANDLE THE REQUESTS */
+
+//export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+//  const { username } = req.query;
+//  const data = await fetch(`http://localhost:3030/tweets?username=${username as string}`);
+//  const json = await data.json();
+//  res.status(200).json(json);
+//}
