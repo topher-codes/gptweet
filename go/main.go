@@ -3,6 +3,11 @@ package main
 import (
     "fmt"
     "context"
+    "os"
+    "net/http"
+    "log"
+    "encoding/json"
+
 
     "github.com/michimani/gotwi"
     "github.com/michimani/gotwi/fields"
@@ -50,9 +55,6 @@ func getUser (username string, c *gotwi.Client) (User, error) {
 
 // Get the Tweets by user ID
 func getTweets (user User, c *gotwi.Client) (TweetList, error) {
-    var results tlt.ListMaxResults
-    fmt.Print("Enter number of tweets to retrieve: ")
-    fmt.Scan(&results)
     input := &tlt.ListTweetsInput{
         ID: user.ID,
         TweetFields: fields.TweetFieldList{
@@ -60,7 +62,7 @@ func getTweets (user User, c *gotwi.Client) (TweetList, error) {
             fields.TweetFieldText,
             fields.TweetFieldAuthorID,
         },
-        MaxResults: results,
+        MaxResults: 20,
     }
 
     p2, err := timeline.ListTweets(context.Background(), c, input)
@@ -93,30 +95,37 @@ func main() {
         return
     }
 
-    // Prompt user to enter username and store in variable
-    var username string
-    fmt.Print("Enter username: ")
-    fmt.Scan(&username)
+    // Http handler for the /tweets endpoint
+    http.HandleFunc("/tweets", func(w http.ResponseWriter, r *http.Request) {
+        // Get the username from the QueryString
+        username := r.URL.Query().Get("username")
 
+        user, err := getUser(username, c)
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
 
+        tweets, err := getTweets(user, c)
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
 
+        // Convert the tweets to JSON
+        js, err := json.Marshal(tweets)
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
 
-    u, err := getUser(username, c)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+        // Write the JSON as the response
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js)
 
-    t, err := getTweets(u, c)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+    })
 
-    for i, tweet := range t.Data {
-        fmt.Println(i, tweet.Text)
-    }
-
-
+    log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), nil))
+    
 }
 
