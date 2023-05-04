@@ -1,21 +1,25 @@
 package main
 
 import (
-    "fmt"
-    "context"
-    "net/http"
-    "log"
-    "encoding/json"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 
+	"os"
 
-    "github.com/michimani/gotwi"
-    "github.com/michimani/gotwi/fields"
-    "github.com/michimani/gotwi/tweet/timeline"
-    tlt "github.com/michimani/gotwi/tweet/timeline/types"
-    "github.com/michimani/gotwi/resources"
+	openai "github.com/sashabaranov/go-openai"
 
-    "github.com/michimani/gotwi/user/userlookup"
-    "github.com/michimani/gotwi/user/userlookup/types"
+	"github.com/michimani/gotwi"
+	"github.com/michimani/gotwi/fields"
+	"github.com/michimani/gotwi/resources"
+	"github.com/michimani/gotwi/tweet/timeline"
+	tlt "github.com/michimani/gotwi/tweet/timeline/types"
+
+	"github.com/michimani/gotwi/user/userlookup"
+	"github.com/michimani/gotwi/user/userlookup/types"
 )
 
 // The User and Tweet structs are used to help with refactoring
@@ -93,6 +97,7 @@ func getTweets (user User, c *gotwi.Client) (TweetList, error) {
 
 
 func main() {
+    // Create Twitter Client
     c, err := gotwi.NewClient(&gotwi.NewClientInput{
         AuthenticationMethod: gotwi.AuthenMethodOAuth2BearerToken,
     })
@@ -100,6 +105,57 @@ func main() {
         fmt.Println(err)
         return
     }
+
+    // Create OpenAI Client
+    aic := openai.NewClient(os.Getenv("OPENAI_API_KEY"))
+    ctx := context.Background()
+
+    // Http handler for the /generate endpoint
+    http.HandleFunc("/generate", func(w http.ResponseWriter, r *http.Request) {
+        // Get the prompt from the QueryString
+        data, err := ioutil.ReadAll(r.Body)
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
+
+        // The body is a JSON object with a "prompt" key
+        var objmap map[string]string
+        json.Unmarshal(data, &objmap)
+        prompt := objmap["prompt"]
+
+
+        // Create the request
+        resp, err := aic.CreateChatCompletion(
+            ctx,
+            openai.ChatCompletionRequest{
+                Model: openai.GPT3Dot5Turbo,
+                Messages: []openai.ChatCompletionMessage{
+                    {
+                        Role: openai.ChatMessageRoleUser,
+                        Content: prompt,
+                    },
+                },
+                MaxTokens: 200,
+            },
+        )
+
+        
+
+        // Marshal the response
+        js, err := json.Marshal(resp.Choices[0].Message.Content)
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
+
+
+        // Write the response
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js)
+    })
+
+
 
     // Http handler for the /tweets endpoint
     http.HandleFunc("/tweets", func(w http.ResponseWriter, r *http.Request) {
