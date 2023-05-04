@@ -125,23 +125,25 @@ func main() {
         prompt := objmap["prompt"]
 
 
-
         // Create the request
-        req := openai.CompletionRequest{
-            Model: openai.GPT3TextDavinci003,
-            MaxTokens: 50,
-            Prompt: prompt,
-        }
+        resp, err := aic.CreateChatCompletion(
+            ctx,
+            openai.ChatCompletionRequest{
+                Model: openai.GPT3Dot5Turbo,
+                Messages: []openai.ChatCompletionMessage{
+                    {
+                        Role: openai.ChatMessageRoleUser,
+                        Content: prompt,
+                    },
+                },
+                MaxTokens: 200,
+            },
+        )
 
-        // Send the request
-        resp, err := aic.CreateCompletion(ctx, req)
-        if err != nil {
-            fmt.Println(err)
-            return
-        }
+        
 
         // Marshal the response
-        js, err := json.Marshal(resp.Choices[0].Text)
+        js, err := json.Marshal(resp.Choices[0].Message.Content)
         if err != nil {
             fmt.Println(err)
             return
