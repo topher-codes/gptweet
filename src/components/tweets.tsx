@@ -1,6 +1,7 @@
 
 const TweetsContainer = ({ tweets }: { tweets: string[] }) => {
 
+
   function removeAtMentions(string: string) {
   // Remove all of the words that start with the "@" character.
   return string.replace(/@\w+/g, "");
@@ -37,6 +38,19 @@ function createTweetsObject(tweets: string[]) {
 }
 
 const newTweets = createTweetsObject(tweets);
+
+const tweetPrompt = []
+tweetPrompt.push("This is your task: You are an AI model that is going to take in a string of tweets, seperated by the ';' character. You will create a conversation based on the tweets. It should represent a story of some kind. You will then return the conversation as a string. You can use any of the tweets, and you can use them in any order. The tweets start here: ")
+
+for (const tweet of newTweets) {
+  if (tweet.selected) {
+    tweetPrompt.push(tweet.text);
+  }
+}
+
+const tweetPromptString = tweetPrompt.join(";");
+
+
 
   return (
     <div className="tweets-container">

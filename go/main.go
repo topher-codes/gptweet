@@ -129,7 +129,7 @@ func main() {
         // Create the request
         req := openai.CompletionRequest{
             Model: openai.GPT3TextDavinci003,
-            MaxTokens: 30,
+            MaxTokens: 300,
             Prompt: prompt,
         }
 

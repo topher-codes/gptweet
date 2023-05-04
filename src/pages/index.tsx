@@ -6,7 +6,7 @@ import {useState, useEffect, useReducer} from "react";
 import {ACTIONS, reducer} from "../hooks/reducer"
 import TweetsContainer from "~/components/tweets";
 
-import {getTweets} from "~/lib/api";
+import {getTweets, generate} from "~/lib/api";
 import Image from "next/image";
 import OptionsForm from "~/components/OptionsForm/OptionsForm";
 
@@ -17,6 +17,8 @@ const Home: NextPage = () => {
   const [state, dispatch] = useReducer(reducer, 
     {tweets: [], cleanedTweets: []}
     )
+
+  const [response, setResponse] = useState("");
 
   
     /* lib api for reference */
@@ -39,8 +41,23 @@ const Home: NextPage = () => {
         cleanedTweets: tweet.text
       }});
     }
+
+
+
   }, [state.tweets]);
 
+  const handleGenerate = async () => {
+    const tweetPrompt = []
+    tweetPrompt.push("This is your task: You are an AI model that is going to take in a string of tweets, seperated by the ';' character. You will create a conversation based on the tweets. It should represent a story of some kind. You will then return the conversation as a string. You can use any of the tweets, and you can use them in any order. The tweets start here: ")
+    for (const tweet of state.cleanedTweets) {
+      tweetPrompt.push(tweet);
+    }
+    const tweetPromptString = tweetPrompt.join(";");
+    const response = await generate(tweetPromptString);
+    setResponse(response);
+  }
+
+  
 
   return (
     <>
@@ -98,13 +115,16 @@ const Home: NextPage = () => {
               } 
               />
               <button type="button" className="border-2 border-black rounded-md mx-2" onClick={setTheTweets}>Get Tweets</button>
+              <button type="button" className="border-2 border-black rounded-md mx-2" onClick={handleGenerate}>Generate</button>
             </form>
             {/* Create a div to display tweets */}
             <div className="flex flex-col">
               <p className="text-2xl">Tweets</p>
               <div className="flex flex-col">
+              {response && <p className="text-2xl">{response}</p>}
                 {/* this should be conditional rendering later on. */}
                 <OptionsForm />
+                <p className="text-2xl">Tweets</p>
                 <TweetsContainer tweets={state.cleanedTweets} />
               </div>
             </div>
