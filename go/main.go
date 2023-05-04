@@ -129,7 +129,7 @@ func main() {
         // Create the request
         req := openai.CompletionRequest{
             Model: openai.GPT3TextDavinci003,
-            MaxTokens: 300,
+            MaxTokens: 50,
             Prompt: prompt,
         }
 
@@ -140,9 +140,17 @@ func main() {
             return
         }
 
+        // Marshal the response
+        js, err := json.Marshal(resp.Choices[0].Text)
+        if err != nil {
+            fmt.Println(err)
+            return
+        }
+
+
         // Write the response
         w.Header().Set("Content-Type", "application/json")
-        w.Write([]byte(resp.Choices[0].Text))
+        w.Write(js)
     })
 
 

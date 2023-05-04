@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
     });
 
-    const json = await data.text();
+    const json = await data.json()
 
     res.status(200).json(json);
   } catch (error: any) {

@@ -53,9 +53,16 @@ const Home: NextPage = () => {
       tweetPrompt.push(tweet);
     }
     const tweetPromptString = tweetPrompt.join(";");
-    const response = await generate(tweetPromptString);
+    let response = await generate(tweetPromptString);
+    // Replace each "\" character with a <br /> tag using regex
+    response = response.replace(/\\n/g, "");
+    response = response.replace(/\\/g, "");
     setResponse(response);
+    
+    
   }
+
+
 
   
 
