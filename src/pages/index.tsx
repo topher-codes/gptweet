@@ -18,7 +18,6 @@ const Home: NextPage = () => {
     {tweets: [], cleanedTweets: []}
     )
 
-
   
     /* lib api for reference */
   const setTheTweets = async () => {
@@ -79,19 +78,7 @@ const Home: NextPage = () => {
         </p>
         {session && (
           <>
-            <p className="mt-3 text-2xl">
-              Your User ID is {session.user.id}
-            </p>
-            <p className="mt-3 text-2xl">
-              Your Twitter username is {session.user.name}
-            </p>
-            <p className="mt-3 text-2xl">
-              Your Twitter email is {session.user.email}
-            </p>
-            <p className="mt-3 text-2xl">
-              Your Twitter image is <Image src={session.user.image} width={50} height={50} alt="img" />
-            </p>
-            <form className="my-4">
+                       <form className="my-4">
               Let's grab your Twitter ID so we can fetch tweets!
               <br />
 
