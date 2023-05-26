@@ -47,6 +47,7 @@ const Home: NextPage = () => {
   }, [state.tweets]);
 
   const handleGenerate = async () => {
+
     const tweetPrompt = []
     tweetPrompt.push("This is your task: You are an AI model that is going to take in a string of tweets, seperated by the ';' character. You will create a conversation based on the tweets. It should represent a story of some kind. You will then return the conversation as a string. You can use any of the tweets, and you can use them in any order. The tweets start here: ")
     for (const tweet of state.cleanedTweets) {
@@ -59,14 +60,12 @@ const Home: NextPage = () => {
     response = response.replace(/\\/g, "");
     setResponse(response);
     
+    console.log("pushed")
     
   }
 
 
-
-  
-
-  return (
+    return (
     <>
     
       <Head>
